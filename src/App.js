@@ -109,6 +109,8 @@ function App() {
   },[guessedLetters, letters, startGame])
 
   useEffect(() => {
+    setScore(0)
+    setGuesses(3)
     setGameStage(stages[0].name)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
