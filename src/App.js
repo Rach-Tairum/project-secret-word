@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import StartScreen from './components/StartScreen/StartScreen';
 import Game from './components/Game/Game';
@@ -23,7 +23,7 @@ function App() {
   const [score, setScore] = useState(0)
 
 
-  const pickWordAndCategory = () => {
+  const pickWordAndCategory = useCallback(() => {
     const categories = Object.keys(words)
     const category = Array.from(Array(1)).map(() => categories[Math.floor(Math.random() * categories.length)])[0]
 
@@ -31,9 +31,13 @@ function App() {
     const word = Array.from(Array(1)).map(() => arrWords[Math.floor(Math.random() * arrWords.length)])[0]
 
     return {word, category}
-  }
+  }, [words])
+  
+  
 
-  const startGame = () => {
+  const startGame = useCallback(() => {
+    clearStates()
+
     const {word, category} = pickWordAndCategory()
     
     
@@ -46,10 +50,9 @@ function App() {
     setLetters(wordLetters)
 
     setGameStage(stages[1].name)
-  }
+  }, [pickWordAndCategory])
 
   const verifyLetter = (letter) => {
-    console.log(letter);
     const normalizedLetter = letter.toLowerCase()
 
     if (
@@ -95,9 +98,15 @@ function App() {
     }
   },[guesses])
 
-  console.log(letters);
-  console.log(guessedLetters);
-  console.log(wrongLetters);
+  useEffect(() => {
+    const uniqueLetters = [...new Set(letters)] // só permite itens únicos em um array
+
+    if (guessedLetters.length === uniqueLetters.length) {
+      setScore((actualScore) => actualScore += 100)
+
+      startGame()
+    }
+  },[guessedLetters, letters, startGame])
 
   return (
     <div className="App">
