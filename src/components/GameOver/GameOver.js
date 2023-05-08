@@ -2,10 +2,13 @@ import React from 'react'
 import style from './GameOver.module.css'
 
 
-const GameOver = ({retry}) => {
+const GameOver = ({ retry, score }) => {
   return (
-    <div>
-      <h1>Game Over</h1>
+    <div className={style.endGame}>
+      <h1>Fim de jogo</h1>
+      <h2>
+        A sua pontuação final foi: <span>{score}</span>
+      </h2>
       <button onClick={retry}>Continuar</button>
     </div>
   )
